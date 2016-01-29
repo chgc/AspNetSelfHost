@@ -11,11 +11,8 @@ namespace AspNetSelfHost
         public void Configuration(IAppBuilder app)
         {
             var config = new HttpConfiguration();
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
+            config.MapHttpAttributeRoutes();
+            app.UseWebApi(config);
 
             var options = new FileServerOptions
             {
@@ -25,7 +22,6 @@ namespace AspNetSelfHost
                 FileSystem = new PhysicalFileSystem(ConfigurationManager.AppSettings["wwwroot"]),
                 StaticFileOptions = { ContentTypeProvider = new CustomContentTypeProvider() }
             };
-            app.UseWebApi(config);
             app.UseFileServer(options);
         }
     }
